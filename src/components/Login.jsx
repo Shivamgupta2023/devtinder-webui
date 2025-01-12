@@ -1,19 +1,30 @@
 import axios from 'axios';
 import React, { useState } from 'react';
+import { addUser } from '../reduxStore/userSlice';
+import { useNavigate } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+import { BASE_URL_API } from '../utils/constants';
 
 const Login = () => {
 
-    const [email, setEmail] = useState('')
+    const [emailId, setEmailId] = useState('')
     const [password, setPassword] = useState('')
 
-    const handleLogin = async() => {
+    const dispatch = useDispatch()
+    const navigate = useNavigate()
+
+    const handleLogin = async () => {
         try {
-            let result = axios.post("http://localhost:7777/login", {
-                email,
+            let result = await axios.post(`${BASE_URL_API}/login`, {
+                emailId,
                 password
-            })
-            console.log('@@', result)
-        } catch(err) {
+            },
+                { withCredentials: true }
+            )
+            debugger
+            dispatch(addUser(result.data))
+            return navigate('/feed')
+        } catch (err) {
             console.log(err)
         }
     }
@@ -39,8 +50,8 @@ const Login = () => {
                                 type="text"
                                 className="grow"
                                 placeholder="Email"
-                                value={email}
-                                onChange={(e) => setEmail(e.target.value)}
+                                value={emailId}
+                                onChange={(e) => setEmailId(e.target.value)}
                             />
                     </label>
                     {/* <label className="input input-bordered flex items-center gap-2 mt-4">
@@ -76,7 +87,7 @@ const Login = () => {
                     </label>
                     </div>
                     <div className="card-actions justify-end">
-                        <button className="btn btn-primary" onClick={handleLogin}>Login ins</button>
+                        <button className="btn btn-primary" onClick={handleLogin}>Log in</button>
                     </div>
                 </div>
             </div>

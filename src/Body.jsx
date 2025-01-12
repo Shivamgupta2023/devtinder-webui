@@ -1,8 +1,35 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import Navbar from './components/Navbar';
-import { Outlet } from 'react-router-dom';
+import { Outlet, useNavigate } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+import { BASE_URL_API }from './utils/constants'
+import axios from 'axios';
+import { addUser } from './reduxStore/userSlice';
 
 const Body = () => {
+
+    const dispatch = useDispatch()
+    const navigate = useNavigate()
+  
+    const fetchData = async () => {
+      try {
+        const data = await axios.get(`${BASE_URL_API}/profile/view`, {
+          withCredentials: true
+        })
+        dispatch(addUser(data))
+        navigate('/feed')
+      } catch (err) {
+        if (err.status === 401) {
+          navigate('/login')
+        }
+        console.error(err)
+      }
+    }
+  
+    useEffect(() => {
+      fetchData()
+    }, [])
+
     return (
         <div>
             {/* Your content goes here */}
