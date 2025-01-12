@@ -1,10 +1,13 @@
 import React from 'react';
+import Navbar from './components/Navbar';
+import { Outlet } from 'react-router-dom';
 
 const Body = () => {
     return (
         <div>
             {/* Your content goes here */}
-            hello
+            <Navbar/>
+            <Outlet/>
         </div>
     );
 };
