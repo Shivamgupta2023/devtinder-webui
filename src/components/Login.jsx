@@ -21,8 +21,7 @@ const Login = () => {
             },
                 { withCredentials: true }
             )
-            debugger
-            dispatch(addUser(result.data))
+            dispatch(addUser(result?.data?.data))
             return navigate('/feed')
         } catch (err) {
             console.log(err)
