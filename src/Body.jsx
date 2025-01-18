@@ -14,7 +14,6 @@ const Body = () => {
     const user = useSelector(store => store.user)
   
     const fetchData = async () => {
-      // debugger
       if(user?.data) return  
       try {
         const data = await axios.get(`${BASE_URL_API}/profile/view`, {

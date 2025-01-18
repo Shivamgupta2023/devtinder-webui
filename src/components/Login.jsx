@@ -9,20 +9,34 @@ const Login = () => {
 
     const [emailId, setEmailId] = useState('')
     const [password, setPassword] = useState('')
+    const [isSignUp, setIsSignUp] = useState(false)
+    const [firstName, setFirstName] = useState('')
+    const [lastName, setLastName] = useState('')
 
     const dispatch = useDispatch()
     const navigate = useNavigate()
 
     const handleLogin = async () => {
         try {
-            let result = await axios.post(`${BASE_URL_API}/login`, {
-                emailId,
-                password
-            },
-                { withCredentials: true }
-            )
-            dispatch(addUser(result?.data?.data))
-            return navigate('/feed')
+            if(isSignUp) {
+                let result = await axios.post(`${BASE_URL_API}/signup`, {
+                    firstName,
+                    lastName,
+                    emailId,
+                    password
+                }, {withCredentials: true})
+                dispatch(addUser(result?.data?.data))
+                return navigate('/profile')
+            } else {
+                let result = await axios.post(`${BASE_URL_API}/login`, {
+                    emailId,
+                    password
+                },
+                    { withCredentials: true }
+                )
+                dispatch(addUser(result?.data?.data))
+                return navigate('/feed')
+            }
         } catch (err) {
             console.log(err)
         }
@@ -32,8 +46,42 @@ const Login = () => {
         <div className='flex flex-row justify-center items-center mt-32'>
             <div className="card bg-base-300 w-96 shadow-xl">
                 <div className="card-body">
-                    <h2 className="card-title">Sign in</h2>
+                    <h2 className="card-title">{isSignUp ? 'Sign up' : 'Sign in'}</h2>
                     <div className=''> 
+                        {isSignUp && <label className="input input-bordered flex items-center gap-2 mt-4">
+                            <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                viewBox="0 0 16 16"
+                                fill="currentColor"
+                                className="h-4 w-4 opacity-70">
+                                <path
+                                    d="M8 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6ZM12.735 14c.618 0 1.093-.561.872-1.139a6.002 6.002 0 0 0-11.215 0c-.22.578.254 1.139.872 1.139h9.47Z" />
+                            </svg>
+                            <input
+                                type="text"
+                                className="grow"
+                                placeholder="First name"
+                                value={firstName}
+                                onChange={(e) => setFirstName(e.target.value)}
+                            />
+                        </label>}  
+                        {isSignUp && <label className="input input-bordered flex items-center gap-2 mt-4">
+                            <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                viewBox="0 0 16 16"
+                                fill="currentColor"
+                                className="h-4 w-4 opacity-70">
+                                <path
+                                    d="M8 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6ZM12.735 14c.618 0 1.093-.561.872-1.139a6.002 6.002 0 0 0-11.215 0c-.22.578.254 1.139.872 1.139h9.47Z" />
+                            </svg>
+                            <input
+                                type="text"
+                                className="grow"
+                                placeholder="Last name"
+                                value={lastName}
+                                onChange={(e) => setLastName(e.target.value)}
+                            />
+                        </label>} 
                     <label className="input input-bordered flex items-center gap-2 mt-4">
                         <svg
                             xmlns="http://www.w3.org/2000/svg"
@@ -53,17 +101,6 @@ const Login = () => {
                                 onChange={(e) => setEmailId(e.target.value)}
                             />
                     </label>
-                    {/* <label className="input input-bordered flex items-center gap-2 mt-4">
-                        <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            viewBox="0 0 16 16"
-                            fill="currentColor"
-                            className="h-4 w-4 opacity-70">
-                            <path
-                                d="M8 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6ZM12.735 14c.618 0 1.093-.561.872-1.139a6.002 6.002 0 0 0-11.215 0c-.22.578.254 1.139.872 1.139h9.47Z" />
-                        </svg>
-                        <input type="text" className="grow" placeholder="Username" />
-                    </label> */}
                     <label className="input input-bordered flex items-center gap-2 mt-4">
                         <svg
                             xmlns="http://www.w3.org/2000/svg"
@@ -84,9 +121,14 @@ const Login = () => {
                                 onChange={(e) => setPassword(e.target.value)}
                             />
                     </label>
+                        {isSignUp ?
+                            <div className='m-3 cursor-pointer' onClick={() => setIsSignUp(false)}>Already have an account? Log in now</div> :
+                            <div className='m-3 cursor-pointer' onClick={() => setIsSignUp(true)}>New to CorpTinder? Sign up now</div>
+                        }
+                    
                     </div>
                     <div className="card-actions justify-end">
-                        <button className="btn btn-primary" onClick={handleLogin}>Log in</button>
+                        <button className="btn btn-primary" onClick={handleLogin}>{isSignUp ? 'Sign up' : 'Log in'}</button>
                     </div>
                 </div>
             </div>
